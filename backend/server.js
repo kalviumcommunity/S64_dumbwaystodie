@@ -1,24 +1,37 @@
-require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const connectDB = require("./connectDB");
+const connectDB = require("./connectDB"); // Import the database connection function
+const menuRoutes = require("./routes"); // Import the correct routes file
+
 
 const app = express();
-const PORT = process.env.PORT;
-// MongoDB Connection
-// mongoose
-//   .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log("MongoDB connected successfully"))
-//   .catch((err) => console.log("MongoDB connection error:", err));
+
+// Connect to the database
 connectDB();
-// Home Route with DB Status
+
+// Middleware for parsing JSON requests
+app.use(express.json()); // Ensures handling of JSON request bodies
+
+// Ping route (testing)
+app.get("/ping", (req, res) => {
+  try {
+    res.send("pong");
+  } catch (error) {
+    res.status(500).send("An error occurred");
+  }
+});
+
+// *Home Route with DB Status*
 app.get("/", (req, res) => {
-  const dbStatus = mongoose.connection.readyState === 1 ? "Connected" : "Not Connected";
-  res.json({ message: "Welcome to the ASAP Project!", databaseStatus: dbStatus });
+  const status = mongoose.connection.readyState === 1 ? "Connected" : "Not Connected";
+  res.json({ message: "Welcome to the API", db_status: status });
 });
 
+// Use the routes defined in routes.js
+app.use("/api", menuRoutes); // 
+
+// Start the server
+const PORT = process.env.PORT ;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
-
-
