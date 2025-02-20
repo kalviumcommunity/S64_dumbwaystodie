@@ -1,14 +1,18 @@
 const mongoose = require("mongoose");
 
-const connectDatabase = () => {
-    mongoose
-        .connect(process.env.MONGO_URL)
-        .then((data) => {
-            console.log(`MongoDB connected with server: ${data.connection.host}`)
-        })
-        .catch((err) => {
-            console.error(`Database connection failed: ${err.messsage}`)
-        })
-} 
+const MONGO_URI = "your_mongodb_atlas_or_local_url_here"; 
 
-module.exports = connectDatabase;
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(" MongoDB Connected Successfully!");
+  } catch (error) {
+    console.error(" MongoDB Connection Error:", error);
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
