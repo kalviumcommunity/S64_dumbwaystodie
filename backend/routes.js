@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const MenuItem = require("./model");
 
-// ✅ Create a new Excuse (POST)
+
 router.post("/", async (req, res) => {
     try {
         const { name, description } = req.body;
